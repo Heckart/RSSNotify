@@ -172,7 +172,7 @@ while 1:
     old_content = load_previous_content(file_path)
     if count >= 3: # be nice and only ping their web page every three minutes
         if has_page_changed(url, old_content):
-            send_notification("api_key", "Web page has changed!", 2)
+            send_notification(api_key, "Web page has changed!", 2)
             new_content = fetch_web_page(url)
             save_new_content(new_content, file_path)
         count = 0
