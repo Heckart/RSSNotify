@@ -11,16 +11,16 @@ api_key = "POST YOUR PUSHBULLET API KEY HERE"
 file_path = "PUT YOUR FILE PATH FOR WEBSITE PREVIOUS CONTENT HERE"
 
 
-def parse_date_format2(date_string):
-    # Format 2: "Sat, 13 Oct 1917 13:42:49 +0200"
+def parse_date_format(date_string):
+    # Format: "Sat, 13 Oct 1917 13:42:49 +0200"
     # Currently used for Vatican feeds
     dt = datetime.datetime.strptime(date_string, "%a, %d %b %Y %H:%M:%S %z")
     timestamp = int(dt.timestamp() * 1000)
     return timestamp
 
 feed_urls = {
-    'http://rss.vatican.va/xml/rss_en.xml' : parse_date_format2, # Francis
-    'http://press.vatican.va/content/salastampa/en/bollettino.feedrss.xml' : parse_date_format2, # Vatican
+    'http://rss.vatican.va/xml/rss_en.xml' : parse_date_format, # Francis
+    'http://press.vatican.va/content/salastampa/en/bollettino.feedrss.xml' : parse_date_format, # Vatican
   }
 
 latest_article_titles = {
@@ -97,10 +97,7 @@ def check_for_new_entries(feed_url, parse_function):
             print('Entry Published Date:', entry.published)
             print('---')
 
-            # Call the function to post to a subreddit
-            # If the article is from a feed where the summary is posted, the summary is passed into the function, 
-            # but if the article is not from a feed where the summary is posted, a NULL value is passed in. 
-            # This is more space efficient than passing in a long summary that will not be used.
+
             if (('Communiqu' not in entry.title) and ('Angelus' not in entry) and (entry.title not in vatican_articles_not_posted)):
                 send_notification(api_key, entry.title, 1)
 
@@ -112,7 +109,7 @@ def check_for_new_entries(feed_url, parse_function):
                 print('Entry Published Date:', entry.published, 1)
                 print('---')
 
-                # Call the function to post to a subreddit
+                
                 if (('Communiqu' not in entry.title) and ('Angelus' not in entry) and (entry.title not in vatican_articles_not_posted)):
                     send_notification(api_key, entry.title, 1)
 
@@ -177,5 +174,4 @@ while 1:
             save_new_content(new_content, file_path)
         count = 0
 
-    time.sleep(60) # be nice, only check every minute
-
+    time.sleep(60)
